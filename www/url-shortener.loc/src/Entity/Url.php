@@ -79,4 +79,16 @@ class Url
 
         return $this;
     }
+
+
+    public function LifeTimeOver(): bool
+    {
+        $date = new \DateTimeImmutable();
+
+        if ($date->format('YmdHis') - $this->getHash() > 100) {
+            return true;
+        }
+
+        return false;
+    }
 }

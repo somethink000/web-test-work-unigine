@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UrlController extends AbstractController
 {
@@ -21,7 +22,7 @@ class UrlController extends AbstractController
         $url = $urlRepository->findFirstByUrl($request->get('url'));
 
         //Check if hash already exist
-        if (empty ($url)) {
+        if (empty($url)) {
 
             //save new hash
             $url = new Url();
@@ -35,29 +36,38 @@ class UrlController extends AbstractController
                 'hash' => $url->getHash()
             ]);
         }
-        return $this->json([
-            'hash' => $url->getHash()
-        ]);
 
+        return $this->json([
+            'hash' => $url->getHash(),
+        ]);
     }
 
-    
+
+
+
+
     /**
      * @Route("/find-url", name="find_url")
      */
-    public function findUrl(Request $request)//: JsonResponse
+    public function findUrl(Request $request) //: JsonResponse
     {
+
+
         /** @var UrlRepository $urlRepository */
         $urlRepository = $this->getDoctrine()->getRepository(Url::class);
         $url = $urlRepository->findOneByHash($request->get('hash'));
-        if (empty ($url)) {
+
+        if ($url->LifeTimeOver()) {
+            throw new NotFoundHttpException('Url not valid');
+        }
+
+        if (empty($url)) {
             return $this->json([
                 'error' => 'Non-existent hash.'
             ]);
         }
 
         return $this->redirect($url->getUrl());
-    
     }
 
 
@@ -69,7 +79,12 @@ class UrlController extends AbstractController
         /** @var UrlRepository $urlRepository */
         $urlRepository = $this->getDoctrine()->getRepository(Url::class);
         $url = $urlRepository->findOneByHash($request->get('hash'));
-        if (empty ($url)) {
+
+        if ($url->LifeTimeOver()) {
+            throw new NotFoundHttpException('Url not valid');
+        }
+
+        if (empty($url)) {
             return $this->json([
                 'error' => 'Non-existent hash.'
             ]);
