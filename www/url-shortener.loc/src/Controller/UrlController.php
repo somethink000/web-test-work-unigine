@@ -12,6 +12,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UrlController extends AbstractController
 {
+    //Example: http://url-shortener.loc/encode-url?url=someurl 
     /**
      * @Route("/encode-url", name="encode_url")
      */
@@ -45,11 +46,11 @@ class UrlController extends AbstractController
 
 
 
-
+    //Example: http://url-shortener.loc/find-url?hash={insert hash there}   
     /**
      * @Route("/find-url", name="find_url")
      */
-    public function findUrl(Request $request) //: JsonResponse
+    public function findUrl(Request $request): JsonResponse
     {
 
 
@@ -70,7 +71,7 @@ class UrlController extends AbstractController
         return $this->redirect($url->getUrl());
     }
 
-
+    //Example: http://url-shortener.loc/decode-url?hash={insert hash there}   
     /**
      * @Route("/decode-url", name="decode_url")
      */

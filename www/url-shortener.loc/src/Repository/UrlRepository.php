@@ -39,4 +39,33 @@ class UrlRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
     }
+
+
+    public function findByTimeDifference(string $from, string $to): ?array
+    {
+
+        return $this->createQueryBuilder('u')
+            ->where('u.createdDate BETWEEN :from AND :to')
+            ->setParameter('from', $from)
+            ->setParameter('to', $to)
+            ->getQuery()
+            ->getArrayResult()
+        ;
+    }
+
+    public function findByDomain(string $value): ?array
+    {
+
+        return $this->createQueryBuilder('u')
+            ->where("SUBSTRING_INDEX(u.url, '/', 3) AS :url")
+            ->setParameter('url', $value)
+            ->setParameter('offset', '-1')
+            ->getQuery()
+            ->getArrayResult()
+        ;
+    }
+
+
+    
+
 }
