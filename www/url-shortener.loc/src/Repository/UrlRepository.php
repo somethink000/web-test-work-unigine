@@ -34,7 +34,7 @@ class UrlRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('u')
             ->andWhere('u.url = :val')
             ->setParameter('val', $value)
-            ->setMaxResults(1)// thats poo
+            ->setMaxResults(1)// skill issue
             ->getQuery()
             ->getOneOrNullResult()
         ;
@@ -55,11 +55,13 @@ class UrlRepository extends ServiceEntityRepository
 
     public function findByDomain(string $value): ?array
     {
-
+        //SUBSTRING(SUBSTRING(SUBSTRING(SUBSTRING(u.url, '/', 3), '://', :offset), '/', 1), '?', 1)
+        
+        //only for URL not for URI // doctrine substring works weird maybe try native sql?
         return $this->createQueryBuilder('u')
-            ->where("SUBSTRING_INDEX(u.url, '/', 3) AS :url")
+            ->where("SUBSTRING(u.url, 1, :lenght) = :url")
             ->setParameter('url', $value)
-            ->setParameter('offset', '-1')
+            ->setParameter('lenght', strlen($value))
             ->getQuery()
             ->getArrayResult()
         ;
