@@ -9,6 +9,9 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
+use App\Kernel;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 
 #[AsCommand(name: 'set-info')]
@@ -16,8 +19,8 @@ class SendUrlCommand extends Command
 {
     protected static $defaultName = 'set-info';
 
-
-    protected function configure(): void
+    
+    protected function configure(  ): void
     {
         $this->addArgument('url', InputArgument::REQUIRED, 'Url to send.');
         $this->addArgument('date', InputArgument::REQUIRED, 'Created date to send.');
@@ -25,14 +28,18 @@ class SendUrlCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-       
-        
+    
 
         $url = $input->getArgument('url');
         $date = $input->getArgument('date');
         
+        // looks like skill issue 
+        $kernel = new Kernel('prod', false);
+        $request = Request::create('/encode-url?url=someurl', 'GET');
+        $response = $kernel->handle($request, HttpKernelInterface::MASTER_REQUEST, false);
 
-        //if ( $this->SendUrlData( $url, $date ) ) {
+       
+       // if ( $this->SendUrlData( $url, $date ) ) {
 
             $output->writeln([
                 '',
@@ -40,61 +47,24 @@ class SendUrlCommand extends Command
                 '============',
                 "Url: {$url}",
                 "Created date: {$date}",
-                //"Created date: {}",
+                "Created date: {$response->getContent()}",
                 '============',
                 '',
             ]);
             
             return Command::SUCCESS;
 
-        // } else {
+       // } else {
 
-        //     $output->writeln([
-        //         '',
-        //         "Writed data is not valid",
-        //         '',
-        //     ]);
+            // $output->writeln([
+            //     '',
+            //     "Writed data is not valid",
+            //     '',
+            // ]);
 
-        //     return Command::FAILURE;
-        // }
-
-
-        
-
-       
+            // return Command::FAILURE;
+        //}
     }
 
-    // <?php
-
-    // namespace App\Command;
-    
-    
-    // use Symfony\Contracts\HttpClient\HttpClientInterface;
-    
-    // class SendUrlHttpClient
-    // {
-    //     public function __construct(
-    //         private HttpClientInterface $client
-    //     ) {
-    //     }
-    
-    //     public function fetchGitHubInformation(): array
-    //     {
-    //         $response = $this->client->request(
-    //             'GET',
-    //             'https://api.github.com/repos/symfony/symfony-docs'
-    //         );
-    
-    //         $statusCode = $response->getStatusCode();
-    //         // $statusCode = 200
-    //         $contentType = $response->getHeaders()['content-type'][0];
-    //         // $contentType = 'application/json'
-    //         $content = $response->getContent();
-    //         // $content = '{"id":521583, "name":"symfony-docs", ...}'
-    //         $content = $response->toArray();
-    //         // $content = ['id' => 521583, 'name' => 'symfony-docs', ...]
-    
-    //         return $content;
-    //     }
-    // }
+  
 }

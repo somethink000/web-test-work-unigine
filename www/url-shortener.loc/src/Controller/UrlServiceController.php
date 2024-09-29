@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class ServiceUrlController extends AbstractController
+class UrlServiceController extends AbstractController
 {
     //Example: http://url-shortener.loc/apply-url?url=someurl&date=23.02.2024
     /**
