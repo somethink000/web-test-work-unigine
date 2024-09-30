@@ -12,7 +12,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UrlServiceController extends AbstractController
 {
-    //Example: http://url-shortener.loc/apply-url?url=someurl&date=23.02.2024
+    //Example: http://url-shortener.loc/apply-url 
     /**
      * @Route("/apply-url", name="apply_url")
      */
@@ -20,37 +20,21 @@ class UrlServiceController extends AbstractController
     {
         /** @var UrlRepository $urlRepository */
 
-       
+        $date = \DateTime::createFromFormat('d-m-Y', $request->get('date'));
+    
+        if ( $date == null) {
+            throw new NotFoundHttpException('Date not valid');
+        }
+        
         return $this->json([
-            'name' => $request->get('url') ,
-            'date' => $request->get('date') ,
+            'url' => $request->get('url') ,
+            'date' =>  $date,
         ]);
-        // $urlRepository = $this->getDoctrine()->getRepository(Url::class);
-        // $url = $urlRepository->findFirstByUrl($request->get('url'));
-
-        // //Check if hash already exist
-        // if (empty($url)) {
-
-        //     //save new hash
-        //     $url = new Url();
-        //     $url->setUrl($request->get('url'));
-
-        //     $entityManager = $this->getDoctrine()->getManager();
-        //     $entityManager->persist($url);
-        //     $entityManager->flush();
-
-        //     return $this->json([
-        //         'hash' => $url->getHash()
-        //     ]);
-        // }
-
-        // return $this->json([
-        //     'hash' => $url->getHash(),
-        // ]);
+       
     }
 
 
-    //Example: http://url-shortener.loc/getstat-url?from=27-09-2024&to=10-10-2024    
+    //Example: http://url-shortener.loc/getstat-url?from=27-09-2024&to=now   
     /**
      * @Route("/getstat-url", name="getstat_url")
      */
@@ -60,8 +44,12 @@ class UrlServiceController extends AbstractController
         /** @var UrlRepository $urlRepository */
         $urlRepository = $this->getDoctrine()->getRepository(Url::class);
         
+
         $from = \DateTime::createFromFormat('d-m-Y', $request->get('from'));
-        $to = \DateTime::createFromFormat('d-m-Y', $request->get('to'));
+
+        $date = new \DateTimeImmutable();
+        $curdate = $request->get('to') == 'now' ? $date->format('d-m-Y') : $request->get('to');
+        $to = \DateTime::createFromFormat('d-m-Y', $curdate);
 
 
         if ( $from == null || $to == null) {

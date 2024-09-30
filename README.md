@@ -15,3 +15,14 @@ This is a test work from Web Department of Unigine Company.
 
 * To encode ```someurl``` you can use ```/encode-url?url=someurl``` endpoint
 * To decode ```somehash``` you can use ```/decode-url?hash=somehash``` endpoint
+
+
+### new features introduction ###
+
+* Console command ```php bin/console send_url someurl 30-09-2024 ```
+* Добавить ендпоинт, который не декодирует урл, а вместо результата редиректит пользователя на декодированный урл ```http://url-shortener.loc/find-url?hash={insert hash there}```
+* на некоторый ендпоинт принимать информацию [урл/дата создания] ``` ```
+* количество уникальных урлов за заданный промежуток времени ```http://url-shortener.loc/getstat-url?from=27-09-2024&to=now```
+* количество уникальных урлов с указанным доменом ```http://url-shortener.loc/getdomin-url?domain=someurl  ```
+
+

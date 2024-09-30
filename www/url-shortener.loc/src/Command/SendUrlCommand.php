@@ -14,10 +14,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 
-#[AsCommand(name: 'set-info')]
+#[AsCommand(name: 'send_url')]
 class SendUrlCommand extends Command
 {
-    protected static $defaultName = 'set-info';
+    protected static $defaultName = 'send_url';
 
     
     protected function configure(  ): void
@@ -33,37 +33,32 @@ class SendUrlCommand extends Command
         $url = $input->getArgument('url');
         $date = $input->getArgument('date');
         
+        
         // looks like skill issue 
         $kernel = new Kernel('prod', false);
-        $request = Request::create('/encode-url?url=someurl', 'GET');
+        $request = Request::create('/apply-url', 'POST', [
+            'url' => $url,
+            'date' => $date,
+        ]);
         $response = $kernel->handle($request, HttpKernelInterface::MASTER_REQUEST, false);
 
        
-       // if ( $this->SendUrlData( $url, $date ) ) {
+     
+        $output->writeln([
+            '',
+            "Sended:" ,
+            '============',
+            "Url: {$url}",
+            "Date: {$date}",
+            '============',
+            '',
+            "Resived data: {$response->getContent()}",
+            '',
+            '',
+        ]);
+        
+        return Command::SUCCESS;
 
-            $output->writeln([
-                '',
-                "Sended:" ,
-                '============',
-                "Url: {$url}",
-                "Created date: {$date}",
-                "Created date: {$response->getContent()}",
-                '============',
-                '',
-            ]);
-            
-            return Command::SUCCESS;
-
-       // } else {
-
-            // $output->writeln([
-            //     '',
-            //     "Writed data is not valid",
-            //     '',
-            // ]);
-
-            // return Command::FAILURE;
-        //}
     }
 
   
