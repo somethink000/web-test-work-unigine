@@ -17,7 +17,7 @@ This is a test work from Web Department of Unigine Company.
 * To decode ```somehash``` you can use ```/decode-url?hash=somehash``` endpoint
 
 
-### new features introduction ###
+### New features introduction ###
 
 * Console command ```php bin/console send_url someurl 30-09-2024 ```
 * Добавить ендпоинт, который не декодирует урл, а вместо результата редиректит пользователя на декодированный урл ```http://url-shortener.loc/find-url?hash={insert hash there}```
